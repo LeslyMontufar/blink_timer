@@ -12,8 +12,8 @@
 
 void hw_led_toggle(void);
 void hw_timer_start(TIM_HandleTypeDef *htim);
-void hw_set_timer(uint32_t delay);
-void hw_set_debouncing_timer(uint32_t delay);
+void hw_set_timer(uint16_t delay);
+void hw_set_debouncing_timer(uint16_t time_ms);
 
 bool hw_button_state_get(void);
 void hw_led_state_set(bool state);

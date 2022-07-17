@@ -13,10 +13,10 @@
 
 #define APP_DEBOUNCING_TIME_MS 	50
 
-#define DELAY_250				500
-#define DELAY_500				1000
+#define DELAY_250				250
+#define DELAY_500				500
 
-static uint32_t delay=DELAY_500;
+static uint16_t delay = DELAY_500;
 bool app_started = false;
 
 extern TIM_HandleTypeDef htim1;
@@ -30,6 +30,7 @@ void app_delay_toggle(void){
 void app_button_interrupt(void){
 	if(!app_started)
 		return;
+	app_delay_toggle();
 	hw_timer_start(&htim2); // debouncing, para por interrupção Elapsed
 }
 

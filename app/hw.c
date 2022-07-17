@@ -12,7 +12,7 @@
 #include "app.h"
 #include "hw.h"
 
-#define CLKINT 2000 // 37500 - 1 = preescalar
+#define CLKINT 2000 // 36000 - 1 = preescalar
 
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
@@ -21,13 +21,13 @@ void hw_timer_start(TIM_HandleTypeDef *htim) {
 	HAL_TIM_Base_Start_IT(htim);
 }
 
-void hw_set_timer(uint32_t delay) {
-	uint32_t arr = (CLKINT*delay/1000)-1;
+void hw_set_timer(uint16_t delay) {
+	uint16_t arr = (CLKINT*delay/1000)-1;
 	__HAL_TIM_SET_AUTORELOAD(&htim1, arr); // led delay
 }
 
-void hw_set_debouncing_timer(uint32_t delay) {
-	uint32_t arr = (CLKINT*delay/1000)-1;
+void hw_set_debouncing_timer(uint16_t time_ms) {
+	uint16_t arr = (CLKINT*time_ms/1000)-1;
 	__HAL_TIM_SET_AUTORELOAD(&htim2, arr); // led delay
 }
 
@@ -42,7 +42,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // Debouncing
 		__HAL_TIM_SET_COUNTER(&htim2, 0); // Reseta timer do debouncing
 		HAL_TIM_Base_Stop_IT(&htim2); // Para o temporizador de debouncing
 		HAL_NVIC_EnableIRQ(EXTI0_IRQn); // Reativa a interrupção do botão
-		app_delay_toggle();
 	}
 }
 
