@@ -10,6 +10,9 @@
 #include <stdint.h>
 #include "main.h"
 #include "app.h"
+#include "hw.h"
+
+#define CLKINT 2000 // 37500 - 1 = preescalar
 
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
@@ -18,15 +21,21 @@ void hw_timer_start(TIM_HandleTypeDef *htim) {
 	HAL_TIM_Base_Start_IT(htim);
 }
 
-void hw_set_timer(uint16_t led_time) {
-	__HAL_TIM_SET_AUTORELOAD(&htim1, led_time);
+void hw_set_timer(uint32_t delay) {
+	uint32_t arr = (CLKINT*delay/1000)-1;
+	__HAL_TIM_SET_AUTORELOAD(&htim1, arr); // led delay
+}
+
+void hw_set_debouncing_timer(uint32_t delay) {
+	uint32_t arr = (CLKINT*delay/1000)-1;
+	__HAL_TIM_SET_AUTORELOAD(&htim2, arr); // led delay
 }
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // Debouncing
 {
 	if(htim == &htim1)	{
-		HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
+		hw_led_toggle();
 		__HAL_TIM_SET_COUNTER(&htim1, 0); // Reseta o timer de piscar led
 	}
 	else if(htim == &htim2)	{
@@ -39,10 +48,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // Debouncing
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if(GPIO_Pin == USER_SW_0_Pin)
+	if(GPIO_Pin == BUTTON_Pin)
 	{
 		HAL_NVIC_DisableIRQ(EXTI0_IRQn);
-		app_switch_0_interrupt();
+		app_button_interrupt();
 	}
 }
 

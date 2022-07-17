@@ -8,10 +8,16 @@
 #ifndef HW_H_
 #define HW_H_
 
+#include "main.h"
+
+void hw_led_toggle(void);
+void hw_timer_start(TIM_HandleTypeDef *htim);
+void hw_set_timer(uint32_t delay);
+void hw_set_debouncing_timer(uint32_t delay);
+
 bool hw_button_state_get(void);
 void hw_led_state_set(bool state);
 void hw_delay_ms(uint32_t time_ms);
-void hw_led_toggle(void);
 void hw_cpu_sleep();
 uint32_t hw_tick_ms_get(void);
 
