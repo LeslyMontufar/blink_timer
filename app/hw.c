@@ -23,24 +23,26 @@ void hw_timer_start(TIM_HandleTypeDef *htim) {
 
 void hw_set_timer(uint16_t delay) {
 	uint16_t arr = (CLKINT*delay/1000)-1;
-	__HAL_TIM_SET_AUTORELOAD(&htim1, arr); // led delay
+	__HAL_TIM_SET_AUTORELOAD(&htim1, arr);
+	__HAL_TIM_SET_COUNTER(&htim1, 0);
 }
 
 void hw_set_debouncing_timer(uint16_t time_ms) {
 	uint16_t arr = (CLKINT*time_ms/1000)-1;
-	__HAL_TIM_SET_AUTORELOAD(&htim2, arr); // led delay
+	__HAL_TIM_SET_AUTORELOAD(&htim2, arr);
+	__HAL_TIM_SET_COUNTER(&htim2, 0);
 }
 
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) // Debouncing
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim == &htim1)	{
 		hw_led_toggle();
-		__HAL_TIM_SET_COUNTER(&htim1, 0); // Reseta o timer de piscar led
+		__HAL_TIM_SET_COUNTER(&htim1, 0);
 	}
 	else if(htim == &htim2)	{
-		__HAL_TIM_SET_COUNTER(&htim2, 0); // Reseta timer do debouncing
-		HAL_TIM_Base_Stop_IT(&htim2); // Para o temporizador de debouncing
+		__HAL_TIM_SET_COUNTER(&htim2, 0);
+		HAL_TIM_Base_Stop_IT(&htim2);
 		HAL_NVIC_EnableIRQ(EXTI0_IRQn); // Reativa a interrupção do botão
 	}
 }

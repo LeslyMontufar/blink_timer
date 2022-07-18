@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include "app.h"
 #include "hw.h"
+#include "main.h"
 
 #define APP_DEBOUNCING_TIME_MS 	50
 
@@ -25,13 +26,14 @@ extern TIM_HandleTypeDef htim2;
 void app_delay_toggle(void){
 	delay = (delay == DELAY_250)? DELAY_500 : DELAY_250;
 	hw_set_timer(delay);
+	__HAL_TIM_SET_COUNTER(&htim1, 0);
 }
 
 void app_button_interrupt(void){
 	if(!app_started)
 		return;
 	app_delay_toggle();
-	hw_timer_start(&htim2); // debouncing, para por interrupção Elapsed
+	hw_timer_start(&htim2);
 }
 
 void app_init(void){
@@ -42,5 +44,5 @@ void app_init(void){
 }
 
 void app_loop(void){
-	hw_cpu_sleep();
+//	hw_cpu_sleep();
 }
