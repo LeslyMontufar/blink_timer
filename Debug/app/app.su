@@ -1,4 +1,4 @@
-../app/app.c:26:6:app_delay_toggle	8	static
-../app/app.c:32:6:app_button_interrupt	8	static
-../app/app.c:39:6:app_init	8	static
-../app/app.c:46:6:app_loop	4	static
+../app/app.c:23:6:app_delay_toggle	8	static
+../app/app.c:28:6:app_button_interrupt	8	static
+../app/app.c:35:6:app_init	8	static
+../app/app.c:42:6:app_loop	4	static

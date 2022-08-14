@@ -20,27 +20,23 @@
 static uint16_t delay = DELAY_500;
 bool app_started = false;
 
-extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
-
 void app_delay_toggle(void){
 	delay = (delay == DELAY_250)? DELAY_500 : DELAY_250;
-	hw_set_timer(delay);
-	__HAL_TIM_SET_COUNTER(&htim1, 0);
+	hw_set_blink_timer(delay);
 }
 
 void app_button_interrupt(void){
 	if(!app_started)
 		return;
 	app_delay_toggle();
-	hw_timer_start(&htim2);
+	hw_debouncing_timer_start();
 }
 
 void app_init(void){
 	app_started = true;
-	hw_set_timer(delay);
+	hw_set_blink_timer(delay);
 	hw_set_debouncing_timer(APP_DEBOUNCING_TIME_MS);
-	hw_timer_start(&htim1);
+	hw_blink_timer_start();
 }
 
 void app_loop(void){

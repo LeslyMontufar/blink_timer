@@ -21,7 +21,15 @@ void hw_timer_start(TIM_HandleTypeDef *htim) {
 	HAL_TIM_Base_Start_IT(htim);
 }
 
-void hw_set_timer(uint16_t delay) {
+void hw_blink_timer_start(void){
+	hw_timer_start(&htim1);
+}
+
+void hw_debouncing_timer_start(void){
+	hw_timer_start(&htim2);
+}
+
+void hw_set_blink_timer(uint16_t delay) {
 	uint16_t arr = (CLKINT*delay/1000)-1;
 	__HAL_TIM_SET_AUTORELOAD(&htim1, arr);
 	__HAL_TIM_SET_COUNTER(&htim1, 0);
@@ -40,7 +48,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		hw_led_toggle();
 		__HAL_TIM_SET_COUNTER(&htim1, 0);
 	}
-	else if(htim == &htim2)	{
+	if(htim == &htim2)	{
 		__HAL_TIM_SET_COUNTER(&htim2, 0);
 		HAL_TIM_Base_Stop_IT(&htim2);
 		HAL_NVIC_EnableIRQ(EXTI0_IRQn); // Reativa a interrupção do botão
